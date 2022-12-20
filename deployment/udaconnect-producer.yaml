@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: udaconnect-producer
+  name: udaconnect-producer
+spec:
+  ports:
+    - name: "5005"
+      port: 5005
+      targetPort: 5005
+      nodePort: 30003
+  selector:
+    service: udaconnect-producer
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: udaconnect-producer
+  name: udaconnect-producer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: udaconnect-producer
+  template:
+    metadata:
+      labels:
+        service: udaconnect-producer
+    spec:
+      containers:
+        - image: mohamedelsherif/udaconnect-producer:latest
+          name: udaconnect-location-producer
+          imagePullPolicy: Always
+      restartPolicy: Always
